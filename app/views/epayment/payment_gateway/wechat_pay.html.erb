@@ -1,0 +1,30 @@
+<h2>收银台</h2>
+
+<div class="container">
+  <%= form_with(scope: :wechat_pay, url: epayment.payment_gateway_update_wechat_pay_path, local: true, id: "wechat_pay_form", class: "wechat_pay_form") do |form| %>
+
+    <%= form.hidden_field :out_trade_no, id: "out_trade_no", value: @out_trade_no %>
+
+    <!-- 表单名称
+      名称 -->
+
+    <h4>商品信息</h4>
+      商品
+      <% if @payment_products %>
+        <% @payment_products.each do |product|%>
+          <%= product["name"] %>
+          <%= "￥#{product["single_price"]} x #{product["num"]}" %>
+          <!-- 商品xx  ￥1.11 x num -->
+        <% end %>
+      <%# else total_fee %>
+
+      <% end %>
+      <%= "应付:￥#{@total_fee}" %>
+      <%= form.hidden_field :total_fee, id: "total_fee", value: @total_fee %>
+    <div>
+      <%# link_to "pay button", wx_pay_path, class: "btn btn-primary" %>
+      <%= form.submit "pay button", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+</div>

@@ -2,7 +2,7 @@ require_dependency "epayment/application_controller"
 
 module Epayment
   class PaymentController < ApplicationController
-    before_action :get_openid, only: [:wechat_pay]
+    # before_action :get_openid, only: [:wechat_pay]
 
     attr_accessor :org_authorize_scope
 
@@ -60,35 +60,7 @@ module Epayment
       Pay::WxPayment.create(wx_payment_params)
     end
 
-    def get_openid
 
-    end
-
-    def set_authorize_scope_to_base
-      if OmniAuth::Strategies::Wechat.default_options.authorize_params.scope
-        save_org_authorize_scope
-        OmniAuth::Strategies::Wechat.default_options.authorize_params.scope = "snsapi_base"
-      end
-    end
-
-    def save_org_authorize_scope
-      if org_scope = OmniAuth::Strategies::Wechat.default_options.authorize_params.scope
-        org_authorize_scope = org_scope
-      end
-    end
-
-    def restore_org_authorize_scope
-      if OmniAuth::Strategies::Wechat.default_options.authorize_params.scope
-        OmniAuth::Strategies::Wechat.default_options.authorize_params.scope = org_authorize_scope
-      end
-    end
-
-    def omniauth_wechat_oauth2_set?
-      OmniAuth::Strategies::Wechat rescue false
-      # https://stackoverflow.com/a/5758492/6256690
-      # Remember in Rails, there is auto-loading in development mode, so it can be tricky when you are testing it out:
-      # Object.const_defined? 'OmniAuth::Strategies::Wechat'
-    end
 
   end
 end

@@ -5,12 +5,23 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
+  <script src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+  
   <%= stylesheet_link_tag    "epayment/application", media: "all" %>
   <%= javascript_include_tag "epayment/application" %>
 </head>
 <body>
+  <div class="container">
+    <% if notice %>
+      <p class="notice alert alert-success fade show" role="alert"><%= notice %></p>
+    <% end %>
 
-<%= yield %>
+    <% if alert %>
+      <p class="alert"><%= alert %></p>
+    <% end %>
+
+    <%= yield %>
+  </div>
 
 </body>
 </html>

@@ -29,7 +29,10 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "sqlite3"
 
+  spec.add_dependency 'jquery-rails'
+  spec.add_dependency 'bootstrap'
+
   spec.add_dependency "omniauth"
   spec.add_dependency "omniauth-wechat-oauth2"
-  
+
 end

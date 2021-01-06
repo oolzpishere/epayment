@@ -3,7 +3,9 @@
 <div class="container">
   <%= form_with(scope: :wechat_pay, url: epayment.payment_gateway_update_wechat_pay_path, local: true, id: "wechat_pay_form", class: "wechat_pay_form") do |form| %>
 
+    <%= form.hidden_field :openid, id: "openid", value: @openid %>
     <%= form.hidden_field :out_trade_no, id: "out_trade_no", value: @out_trade_no %>
+    <%= form.hidden_field :payment_body, id: "payment_body", value: @payment_body %>
 
     <!-- 表单名称
       名称 -->

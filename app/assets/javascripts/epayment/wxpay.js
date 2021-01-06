@@ -11,7 +11,10 @@ $(document).on("ready page:load turbolinks:load", function() {
     // console.log("under testing")
     params = {
       // TODO: total_fee to hidden field.
-      total_fee: $('#total_fee').val()
+      openid: $('#openid').val(),
+      total_fee: $('#total_fee').val(),
+      out_trade_no: $('#out_trade_no').val(),
+      payment_body: $('#payment_body').val()
     }
     wxpay(params);
 
@@ -22,8 +25,6 @@ $(document).on("ready page:load turbolinks:load", function() {
     $.post('/wechat_pay', params,
     function(data) {
       alert('package' + data.package);
-      // transaction_id
-      addPaymentId(data.payment_id);
 
       if (typeof data.package !== 'undefined') {
         invokeWXPay(data)
@@ -34,9 +35,6 @@ $(document).on("ready page:load turbolinks:load", function() {
     });
   }
 
-  function addPaymentId(id) {
-    $('#order_patment_id').val(id)
-  }
 
   function invokeWXPay(data) {
     wx.chooseWXPay({

@@ -2,28 +2,27 @@ require_dependency "epayment/application_controller"
 
 module Epayment
   class PaymentController < ApplicationController
+    skip_before_action :verify_authenticity_token, only: [:wechat_pay]
+
     # before_action :get_openid, only: [:wechat_pay]
 
-    attr_accessor :org_authorize_scope
-
     def wechat_pay
-      current_identify = Account::Identify.find_by(user: current_user, provider: 'wechat')
-
       form_params = {
-        total_fee: params['total_fee']
+        openid: params['openid'],
+        total_fee: params['total_fee'],
+        out_trade_no: params['out_trade_no'],
+        body: params['payment_body']
       }
       pay_params = {
-        body: 'Test Wechat Pay',
-        out_trade_no: "hotel-order-#{Time.now.to_i}",
         # total_fee: 1,
         spbill_create_ip: request.remote_ip,
         notify_url: 'http://qyjiudian-customer.sflx.com.cn/wx_notify',
         trade_type: 'JSAPI',
-        openid: current_identify.uid
+        # openid: current_identify.uid
       }.merge(form_params)
 
-      payment = Pay::Payment.create
-      create_wx_payment(payment, pay_params)
+      # payment = Pay::Payment.create
+      # create_wx_payment(payment, pay_params)
 
       # result, result_hash = Admin::Prepay.new().invoke_unifiedorder(pay_params)
       # if result
@@ -41,8 +40,6 @@ module Epayment
           noncestr: prepay_result['nonce_str']
         }
         pay_params = WxPay::Service.generate_js_pay_req js_pay_params
-        # add payment_id to return.
-        pay_params.merge!({payment_id: payment.id})
 
         logger.info pay_params
         render json: pay_params
@@ -54,11 +51,11 @@ module Epayment
 
     private
 
-    def create_wx_payment(payment, pay_params)
-      wx_payment_params = pay_params.slice(:out_trade_no, :total_fee)
-      wx_payment_params.merge!(payment_id: payment.id)
-      Pay::WxPayment.create(wx_payment_params)
-    end
+    # def create_wx_payment(payment, pay_params)
+    #   wx_payment_params = pay_params.slice(:out_trade_no, :total_fee)
+    #   wx_payment_params.merge!(payment_id: payment.id)
+    #   Pay::WxPayment.create(wx_payment_params)
+    # end
 
 
 

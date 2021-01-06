@@ -11,10 +11,11 @@ module Epayment
         return
       end
       # make session
-      openid = raw_info["openid"] if raw_info["openid"]
-      unionid = raw_info["unionid"] if raw_info["unionid"]
+      @openid = raw_info["openid"] if raw_info["openid"]
+      @unionid = raw_info["unionid"] if raw_info["unionid"]
       @total_fee = params[:total_fee]
       @out_trade_no = params[:out_trade_no]
+      @payment_body = params[:payment_body] || 'Test Wechat Pay'
       # click pay button
       @payment_products = get_payment_products
 

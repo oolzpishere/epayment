@@ -16,12 +16,12 @@ $(document).on("ready page:load turbolinks:load", function() {
       out_trade_no: $('#out_trade_no').val(),
       payment_body: $('#payment_body').val()
     }
-    wxpay(params);
+    wxpay($(this), params);
 
-    $(this).unbind('submit').submit(); // continue the submit unbind preventDefault
+
   });
 
-  function wxpay(params = {}) {
+  function wxpay($wechat_pay_form, params = {}) {
     $.post('/wechat_pay', params,
     function(data) {
       alert('package' + data.package);
@@ -31,7 +31,8 @@ $(document).on("ready page:load turbolinks:load", function() {
       } else {
         // TODO: error handling.
       }
-
+      
+      $wechat_pay_form.unbind('submit').submit(); // continue the submit unbind preventDefault
     });
   }
 

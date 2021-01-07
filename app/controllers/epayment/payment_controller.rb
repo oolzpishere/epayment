@@ -1,12 +1,10 @@
 require_dependency "epayment/application_controller"
-
+# common handling.
 module Epayment
   class PaymentController < ApplicationController
-    skip_before_action :verify_authenticity_token, only: [:wechat_pay]
+    skip_before_action :verify_authenticity_token, only: [:wechat_pay_unifiedorder]
 
-    # before_action :get_openid, only: [:wechat_pay]
-
-    def wechat_pay
+    def wechat_pay_unifiedorder
       form_params = {
         openid: params['openid'],
         total_fee: params['total_fee'],
@@ -16,22 +14,10 @@ module Epayment
       pay_params = {
         # total_fee: 1,
         spbill_create_ip: request.remote_ip,
-        notify_url: 'http://qyjiudian-customer.sflx.com.cn/wx_notify',
+        notify_url: Epayment.wechat_pay_notify_url,
         trade_type: 'JSAPI',
         # openid: current_identify.uid
       }.merge(form_params)
-
-      # payment = Pay::Payment.create
-      # create_wx_payment(payment, pay_params)
-
-      # result, result_hash = Admin::Prepay.new().invoke_unifiedorder(pay_params)
-      # if result
-      #   # add payment_id to return.
-      #   result_hash.merge!({payment_id: payment.id})
-      #   render json: result_hash
-      # else
-      #   render json: result_hash
-      # end
 
       prepay_result = WxPay::Service.invoke_unifiedorder(pay_params)
       if prepay_result.success?
@@ -48,14 +34,6 @@ module Epayment
         render json: prepay_result
       end
     end
-
-    private
-
-    # def create_wx_payment(payment, pay_params)
-    #   wx_payment_params = pay_params.slice(:out_trade_no, :total_fee)
-    #   wx_payment_params.merge!(payment_id: payment.id)
-    #   Pay::WxPayment.create(wx_payment_params)
-    # end
 
 
 

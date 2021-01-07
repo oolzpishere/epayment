@@ -1,5 +1,9 @@
 require "epayment/engine"
 
 module Epayment
-  # Your code goes here...
+  # set default value
+  # @notify_url = ...
+  class << self
+    attr_accessor :wechat_pay_notify_url, :wechat_payment_model
+  end
 end

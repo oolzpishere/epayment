@@ -22,7 +22,7 @@ $(document).on("ready page:load turbolinks:load", function() {
   });
 
   function wxpay($wechat_pay_form, params = {}) {
-    $.post('/wechat_pay', params,
+    $.post('/wechat_pay_unifiedorder', params,
     function(data) {
       alert('package' + data.package);
 
@@ -31,7 +31,7 @@ $(document).on("ready page:load turbolinks:load", function() {
       } else {
         // TODO: error handling.
       }
-      
+
       $wechat_pay_form.unbind('submit').submit(); // continue the submit unbind preventDefault
     });
   }

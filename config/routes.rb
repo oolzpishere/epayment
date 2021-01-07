@@ -4,8 +4,8 @@ Epayment::Engine.routes.draw do
   get '/payment_gateway/wechat_pay', to: '/epayment/payment_gateway#wechat_pay'
   post '/payment_gateway/update_wechat_pay', to: '/epayment/payment_gateway#update_wechat_pay'
   # call wx union pay action
-  post 'wechat_pay', to: '/epayment/payment#wechat_pay'
+  post 'wechat_pay_unifiedorder', to: '/epayment/payment#wechat_pay_unifiedorder'
 
-  # wx pay callback
-  post 'wx_notify', to: '/epayment/payment_callback#wx_notify'
+  # wechat pay callback
+  post 'wechat_payment_notify', to: '/epayment/payment_callback#wechat_payment_notify'
 end

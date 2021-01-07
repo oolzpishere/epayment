@@ -6,6 +6,9 @@ module Epayment
     before_action :init_params
 
     def wechat_pay
+      # check whether have openid
+      # first time redirect_to get openid and redirect back.
+      # when getted openid, then continue.
       unless (raw_info = session.delete('wechat_snsapi_base_raw_info'))
         get_openid
         return
@@ -48,8 +51,8 @@ module Epayment
       if omniauth_strategies_wechat_set?
         # add_wechat_oauth_base_job_stack
           # session["wechat_oauth_base.job_stack"] = [{after_callback_phase: true, redirect_uri: current_url}]
-        session["after_wechat_base_callback_url"] = request.original_url
-        redirect_to "/auth/wechat?scope=snsapi_base"
+        # session["after_wechat_base_callback_url"] = request.original_url
+        redirect_to "/auth/wechat?scope=snsapi_base&origin=#{CGI::escape(request.original_url)}"
       end
     end
 

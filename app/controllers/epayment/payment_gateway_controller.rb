@@ -3,7 +3,7 @@
 # common action.
 module Epayment
   class PaymentGatewayController < ApplicationController
-    before_action :init_params
+    skip_before_action :verify_authenticity_token, only: [:update_wechat_pay]
 
     def wechat_pay
       # check whether have openid
@@ -21,9 +21,6 @@ module Epayment
     def update_wechat_pay
       total_fee = wechat_pay_params["total_fee"]
       out_trade_no = wechat_pay_params["out_trade_no"]
-      # wx_payment = Admin::WxPayment.find_by(out_trade_no: out_trade_no)
-      # wx_payment.total_fee = total_fee
-      # wx_payment.save
 
       # redirection path set by other Apps before pay.
       redirect_to get_after_payment_path
@@ -34,9 +31,6 @@ module Epayment
       params.fetch(:wechat_pay, {}).permit( :total_fee, :out_trade_no )
     end
 
-    def init_params
-
-    end
 
     def get_openid
       if omniauth_strategies_wechat_set?
@@ -54,9 +48,7 @@ module Epayment
       # Object.const_defined? 'OmniAuth::Strategies::Wechat'
     end
 
-    def get_payment_products
-      session.delete("epayment.products")
-    end
+
 
     def check_total_fee(total_fee, products)
       total_count = 0
@@ -89,6 +81,10 @@ module Epayment
         rails("@openid && @total_fee && @out_trade_no, at least one of necessary params not pass to action.")
       end
       @payment_body = params[:payment_body] || 'Test Wechat Pay'
+    end
+
+    def get_payment_products
+      session.delete("epayment.products")
     end
 
   end

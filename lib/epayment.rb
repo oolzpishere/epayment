@@ -1,5 +1,11 @@
 require "epayment/engine"
 
+require 'bootstrap'
+require 'jquery-rails'
+
+require 'omniauth'
+require "omniauth-wechat-oauth2"
+
 module Epayment
   # set default value
   # @notify_url = ...

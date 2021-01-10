@@ -1,4 +1,4 @@
-require_dependency "epayment/application_controller"
+# require_dependency "epayment/application_controller"
 
 # common action.
 module Epayment
@@ -8,23 +8,14 @@ module Epayment
     def wechat_pay
       # check whether have openid
       # first time redirect_to get openid and redirect back.
-      # when getted openid, then continue.
-      unless (raw_info = session.delete('wechat_snsapi_base_raw_info'))
+      # when have openid, then continue.
+      unless ( raw_info = session.delete('wechat_snsapi_base_raw_info') )
         get_openid
         return
       end
-      # make session
-      @openid = raw_info["openid"] if raw_info["openid"]
-      @unionid = raw_info["unionid"] if raw_info["unionid"]
-      @total_fee = params[:total_fee]
-      @out_trade_no = params[:out_trade_no]
-      @payment_body = params[:payment_body] || 'Test Wechat Pay'
-      # click pay button
-      @payment_products = get_payment_products
 
-      unless check_total_fee(@total_fee, @payment_products)
-        raise "生成支付页面失败，请联系管理员处理"
-      end
+      set_necessary_params(raw_info, params)
+      check_total_fee(@total_fee, @payment_products)
     end
 
     def update_wechat_pay
@@ -75,12 +66,29 @@ module Epayment
         num = product["num"].to_i
         total_count += (price * num)
       end
-      total_fee == total_count
+
+      unless total_fee == total_count
+        raise "total_fee not equal total_count, 生成支付页面失败"
+      end
     end
 
     def get_after_payment_path
       # redirection path set by other Apps before pay.
       session.delete("epayment.after_payment_redirection_path")  || "/"
+    end
+
+    def set_necessary_params(raw_info, params)
+      if raw_info["openid"] || raw_info["unionid"]
+        @openid = raw_info["openid"] if raw_info["openid"]
+        @unionid = raw_info["unionid"] if raw_info["unionid"]
+      end
+      @total_fee = params[:total_fee]
+      @out_trade_no = params[:out_trade_no]
+      @payment_products = get_payment_products
+      unless @openid && @total_fee && @out_trade_no && @payment_products
+        rails("@openid && @total_fee && @out_trade_no, at least one of necessary params not pass to action.")
+      end
+      @payment_body = params[:payment_body] || 'Test Wechat Pay'
     end
 
   end

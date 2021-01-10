@@ -8,4 +8,5 @@ Epayment::Engine.routes.draw do
 
   # wechat pay callback
   post 'wechat_payment_notify', to: '/epayment/payment_callback#wechat_payment_notify'
+
 end

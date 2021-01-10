@@ -1,4 +1,4 @@
-require_dependency "epayment/application_controller"
+# require_dependency "epayment/application_controller"
 
 module Epayment
   class PaymentCallbackController < ApplicationController

@@ -26,6 +26,7 @@ group :development, :test do
   gem 'capybara'
   # download the exact version with your chromebrowser, don't user gem:webdriver.
   gem 'selenium-webdriver'
+  gem "webmock"
 
   # gem 'rspec-rails'
   # guard detect chang need gem install rb-fsevent

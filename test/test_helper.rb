@@ -4,6 +4,7 @@ ENV["RAILS_ENV"] = "test"
 require 'capybara/rails'
 require 'capybara/minitest'
 require 'mocha/minitest'
+# require 'webmock/minitest'
 # wait Ajax request to return for 5 seconds, default is 2s.
 Capybara.default_max_wait_time = 5
 

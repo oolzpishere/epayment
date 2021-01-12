@@ -1,7 +1,7 @@
 # require_dependency "epayment/application_controller"
 
 module Epayment
-  class PaymentCallbackController < ApplicationController
+  class PaymentCallbackController < Epayment::ApplicationController
     skip_before_action :verify_authenticity_token, only: [:wechat_payment_notify]
 
     def wechat_payment_notify

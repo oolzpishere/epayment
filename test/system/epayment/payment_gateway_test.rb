@@ -2,31 +2,40 @@ require "application_system_test_case"
 
 class PaymentGatewayTest < ApplicationSystemTestCase
   def setup
+    # test instance:
+    @openid = "fake_openid"
+    @total_fee = "2"
+    @out_trade_no = "fake_out_trade_no"
+    @payment_products = [{name: "product_name", single_price: 2, num: 1}].map {|h| h.transform_keys(&:to_s)}
 
+    @invoke_pay_url="/payment_gateway/wechat_pay?total_fee=#{@total_fee}&out_trade_no=#{@out_trade_no}"
+  end
+
+  teardown do
+    Capybara.reset_sessions!
+    # Capybara.use_default_driver
   end
 
   test "visit payment_gateway" do
+    # WebMock.allow_net_connect!
+    # set fake openid and products
+    visit "/set_fake_wechat_base_session"
+    visit "/set_fake_products"
 
-    visit "/payment_gateway/wechat_pay"
-    #
-    # fill_in 'phone', with: @user.phone
-    #
-    # click_link '发送验证码'
-    # # countDown test
-    # assert_content '再次发送验证码'
-    # assert find('#send_verification_code', class: 'disabled')
-    #
-    # using_wait_time 5 do
-    #   fill_in 'verification_code', with: @fake_verification_code
-    # end
-    # click_button '登录'
-    #
+    visit @invoke_pay_url
 
+    # host_and_port = current_url.match(/#{current_host}:\d+/)[0]
+    # stub = stub_request(:post, "#{host_and_port}/wechat_pay_unifiedorder")
 
-    # assert_current_path
-    # assert_content '用户登录成功'
-    # assert_content @user.phone
+    click_button "pay button"
+    wait_for_ajax
+
+    assert_content 'product_name'
+    assert_content "￥2 x 1"
+    assert_content "应付:￥2"
+    assert_content "invoke wechat pay unifiedorder and generate package fail."
   end
+
 
 
 end

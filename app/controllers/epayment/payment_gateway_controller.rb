@@ -2,7 +2,7 @@
 
 # common action.
 module Epayment
-  class PaymentGatewayController < ApplicationController
+  class PaymentGatewayController < Epayment::ApplicationController
     skip_before_action :verify_authenticity_token, only: [:update_wechat_pay]
 
     def wechat_pay
@@ -78,7 +78,7 @@ module Epayment
       @out_trade_no = params[:out_trade_no]
       @payment_products = get_payment_products
       unless @openid && @total_fee && @out_trade_no && @payment_products
-        rails("@openid && @total_fee && @out_trade_no, at least one of necessary params not pass to action.")
+        raise("@openid && @total_fee && @out_trade_no, at least one of necessary params not pass to action.")
       end
       @payment_body = params[:payment_body] || 'Test Wechat Pay'
     end

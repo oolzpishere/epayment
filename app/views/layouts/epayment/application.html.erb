@@ -15,11 +15,15 @@
 <body>
   <div class="container">
     <% if notice %>
-      <p class="notice alert alert-success fade show" role="alert"><%= notice %></p>
+      <p id="notice" class="notice alert alert-success fade show" role="alert"><%= notice %></p>
+    <% else %>
+      <p id="notice" class="notice alert alert-success hide d-none" role="alert"></p>
     <% end %>
 
     <% if alert %>
-      <p class="alert"><%= alert %></p>
+      <p id="alert" class="alert alert-warning fade show"><%= alert %></p>
+    <% else %>
+      <p id="alert" class="alert alert-warning hide d-none"></p>
     <% end %>
 
     <%= yield %>

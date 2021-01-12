@@ -4,7 +4,7 @@ $(document).on("ready page:load turbolinks:load", function() {
   $('#wechat_pay_form').submit( function(event) {
     event.preventDefault(); //this will prevent the default submit
 
-    alert('submit123')
+    // alert('submit123')
     wx.config({
       appId: "wx37860e03b3e55945"
     });
@@ -22,17 +22,26 @@ $(document).on("ready page:load turbolinks:load", function() {
   });
 
   function wxpay($wechat_pay_form, params = {}) {
-    $.post('/wechat_pay_unifiedorder', params,
-    function(data) {
-      alert('package' + data.package);
+    // $.post('/wechat_pay_unifiedorder', params,
+    $.ajax({
+      url: '/wechat_pay_unifiedorder',
+      type: "POST",
+      data: params,
+      success: function(data) {
+        // alert('package' + data.package);
+        if (typeof data.package !== 'undefined') {
+          invokeWXPay(data)
+        } else {
+          // TODO: error handling.
+        }
 
-      if (typeof data.package !== 'undefined') {
-        invokeWXPay(data)
-      } else {
-        // TODO: error handling.
+        $wechat_pay_form.unbind('submit').submit(); // continue the submit unbind preventDefault
+      },
+      error: function(data) {
+        // TODO:
+        $("#alert").text("invoke wechat pay unifiedorder and generate package fail.");
+        $("#alert").removeClass("d-none");
       }
-
-      $wechat_pay_form.unbind('submit').submit(); // continue the submit unbind preventDefault
     });
   }
 

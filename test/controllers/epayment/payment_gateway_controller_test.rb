@@ -21,7 +21,7 @@ module Epayment
     end
 
     test "when getted openid and necessary params show" do
-      # set openid stub
+      # set fake openid and products
       get "/set_fake_wechat_base_session"
       get "/set_fake_products"
       get @invoke_pay_url

@@ -31,8 +31,8 @@ class PaymentGatewayTest < ApplicationSystemTestCase
     wait_for_ajax
 
     assert_content 'product_name'
-    assert_content "￥2 x 1"
-    assert_content "应付:￥2"
+    assert_content "￥0.02 x 1"
+    assert_content "应付:￥0.02"
     assert_content "invoke wechat pay unifiedorder and generate package fail."
   end
 

@@ -54,7 +54,7 @@ module Epayment
       total_count = 0
       total_fee = total_fee.to_i
       products.each do |product|
-        price = product["single_price"].to_i
+        price = product["single_price"].fee
         num = product["num"].to_i
         total_count += (price * num)
       end
@@ -75,8 +75,11 @@ module Epayment
         @unionid = raw_info["unionid"] if raw_info["unionid"]
       end
       @total_fee = params[:total_fee]
+      @money = ::Epayment::Money.new(@total_fee)
       @out_trade_no = params[:out_trade_no]
       @payment_products = get_payment_products
+      @payment_products = add_money_to_products(@payment_products)
+
       unless @openid && @total_fee && @out_trade_no && @payment_products
         raise("@openid && @total_fee && @out_trade_no, at least one of necessary params not pass to action.")
       end
@@ -85,6 +88,11 @@ module Epayment
 
     def get_payment_products
       session.delete("epayment.products")
+    end
+
+    def add_money_to_products(products)
+      products.map { |hash| hash["single_price"] = ::Epayment::Money.new(hash["single_price"]) }
+      products
     end
 
   end

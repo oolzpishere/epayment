@@ -35,4 +35,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "omniauth"
   spec.add_dependency "omniauth-wechat-oauth2"
 
+  spec.add_dependency 'wx_pay'
+
 end

@@ -6,6 +6,7 @@ module Epayment
 
     def wechat_pay_unifiedorder
       return ture if Epayment.test_mode
+      
       form_params = {
         openid: params['openid'],
         total_fee: params['total_fee'],

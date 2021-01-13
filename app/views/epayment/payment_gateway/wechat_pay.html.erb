@@ -15,13 +15,13 @@
       <% if @payment_products %>
         <% @payment_products.each do |product|%>
           <%= product["name"] %>
-          <%= "￥#{product["single_price"]} x #{product["num"]}" %>
+          <%= "￥#{product["single_price"].humanize} x #{product["num"]}" %>
           <!-- 商品xx  ￥1.11 x num -->
         <% end %>
       <%# else total_fee %>
 
       <% end %>
-      <%= "应付:￥#{@total_fee}" %>
+      <%= "应付:￥#{@money.humanize}" %>
       <%= form.hidden_field :total_fee, id: "total_fee", value: @total_fee %>
     <div>
       <%# link_to "pay button", wx_pay_path, class: "btn btn-primary" %>

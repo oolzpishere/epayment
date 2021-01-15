@@ -9,7 +9,9 @@ module Epayment
       @openid = "fake_openid"
       @total_fee = "2"
       @out_trade_no = "fake_out_trade_no"
-      @payment_products = [{name: "product_name", single_price: 2, num: 1}].map {|h| h.transform_keys(&:to_s)}
+      @payment_products = [{name: "product_name",
+         single_price: ::Epayment::Money.new(2).humanize,
+         num: 1}].map {|h| h.transform_keys(&:to_s)}
 
       @invoke_pay_url="/payment_gateway/wechat_pay?total_fee=#{@total_fee}&out_trade_no=#{@out_trade_no}"
     end
@@ -29,7 +31,11 @@ module Epayment
       assert_equal(@openid, @controller.instance_variable_get("@openid") )
       assert_equal(@total_fee, @controller.instance_variable_get("@total_fee") )
       assert_equal(@out_trade_no, @controller.instance_variable_get("@out_trade_no") )
-      assert_equal(@payment_products, @controller.instance_variable_get("@payment_products") )
+
+      controller_payment_products = @controller.instance_variable_get("@payment_products")
+      controller_payment_products.map {|h| h["single_price"] = h["single_price"].humanize }
+
+      assert_equal( @payment_products, controller_payment_products )
 
       assert_response :success
     end

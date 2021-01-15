@@ -4,10 +4,13 @@ module Epayment
     #   fee: integer
     #   digits: integer, indicate how many digits from fee to normal money.
     #     eg. fee = 1, digits = 2, humanize money = 0.01
-    attr_reader :fee, :digits
+    attr_reader :fee, :digits, :product
     def initialize(fee, digits: 2)
       @fee = fee
       @digits = digits
+      # float
+      # eg. 1 / 100.0 = 0.01
+      @product = (1 / denominator.to_f)
     end
 
     def humanize
@@ -15,11 +18,7 @@ module Epayment
     end
 
     private
-    # float
-    # eg. 1 / 100.0 = 0.01
-    def product
-      @product ||= (1 / denominator.to_f)
-    end
+
     # eg. digits = 2, denominator = 100
     def denominator
       sum = 1
